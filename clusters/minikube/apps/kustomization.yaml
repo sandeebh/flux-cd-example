@@ -1,0 +1,4 @@
+resources:
+  - namespace-pg.yaml
+  - pg-cluster.yaml
+  - pheonix-helmrelease.yaml  

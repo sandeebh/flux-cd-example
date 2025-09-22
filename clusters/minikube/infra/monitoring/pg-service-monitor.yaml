@@ -1,0 +1,25 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  annotations:
+    meta.helm.sh/release-name: pg-exporter
+    meta.helm.sh/release-namespace: monitoring
+  generation: 1
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    helm.toolkit.fluxcd.io/name: pg-exporter
+    helm.toolkit.fluxcd.io/namespace: monitoring
+    release: kube-prometheus-stack
+  name: pg-exporter-prometheus-postgres-exporter
+  namespace: monitoring
+spec:
+  endpoints:
+  - port: http
+  jobLabel: pg-exporter-prometheus-postgres-exporter
+  namespaceSelector:
+    matchNames:
+    - monitoring
+  selector:
+    matchLabels:
+      app: prometheus-postgres-exporter
+      release: pg-exporter

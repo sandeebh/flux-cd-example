@@ -1,0 +1,40 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: pg-exporter
+  namespace: monitoring
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: prometheus-postgres-exporter
+      version: 6.1.0
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus-community
+        namespace: flux-system
+  values:
+    serviceMonitor:
+      enabled: false
+    podMonitor:
+      enabled: true  
+    # Use secret values instead of hardcoding
+    env:
+      - name: DATA_SOURCE_URI
+        valueFrom:
+          secretKeyRef:
+            name: postgres-app
+            key: uri
+            optional: false
+      - name: DATA_SOURCE_USER
+        valueFrom:
+          secretKeyRef:
+            name: postgres-app
+            key: username
+            optional: false
+      - name: DATA_SOURCE_PASS
+        valueFrom:
+          secretKeyRef:
+            name: postgres-app
+            key: password
+            optional: false

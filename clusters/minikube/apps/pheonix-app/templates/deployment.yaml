@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phoenix-app
+  labels:
+    app: phoenix-app
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: phoenix-app
+  template:
+    metadata:
+      labels:
+        app: phoenix-app
+    spec:
+      containers:
+        - name: phoenix
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 4000
+          env:
+            # Database DSN
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.secretName }}
+                  key: {{ .Values.database.secretKeys.url }}
+
+            - name: DATABASE_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.secretName }}
+                  key: {{ .Values.database.secretKeys.host }}
+
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.secretName }}
+                  key: {{ .Values.database.secretKeys.name }}
+
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.secretName }}
+                  key: {{ .Values.database.secretKeys.user }}
+
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.secretName }}
+                  key: {{ .Values.database.secretKeys.password }}
+
+            # Phoenix app-specific vars
+            - name: URL_HOST
+              value: "{{ .Values.url.host }}"
+            - name: URL_PORT
+              value: "{{ .Values.url.port }}"
+            - name: PHX_SERVER
+              value: "{{ .Values.env.phxServer }}"
+
+            # Secret key for Phoenix session/cookie signing
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: phoenix-app-secret
+                  key: SECRET_KEY_BASE

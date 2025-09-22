@@ -1,0 +1,21 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: phoenix-app
+  namespace: postgres   # or whatever namespace you want
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: ./clusters/minikube/apps/pheonix-app
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+  values:
+    image:
+      repository: sressandeep/pheonix-app
+      tag: latest
+    service:
+      type: ClusterIP
+      port: 4000
