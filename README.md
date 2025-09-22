@@ -79,9 +79,7 @@ Flux will now automatically apply all manifests and Helm releases from this repo
 **Install CloudNativePG operator:**
 
 ```bash
-helm repo add cnpg https://cloudnative-pg.github.io/charts
-helm repo update
-helm install cnpg-operator cnpg/cloudnative-pg-operator --namespace cnpg-system --create-namespace
+Installed via flux
 ```
 
 **Provision PostgreSQL cluster:**
@@ -109,9 +107,7 @@ spec:
 **Install kube-prometheus-stack via Helm:**
 
 ```bash
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
-helm install monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+Installed via flux
 ```
 
 **Grafana Dashboard:**
